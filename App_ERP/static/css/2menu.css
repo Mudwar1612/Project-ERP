@@ -1,0 +1,245 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+/* Styling untuk layout vertikal */
+.all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 50px;
+    padding-left: 50px;
+    width: 100%;
+}
+
+.judul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Mengatur elemen agar tidak berdesakan */
+    gap: 50px; /* Jarak antara sidebar dan menu */
+}
+
+.container1 {
+    display: flex;
+    align-items: flex-start; /* Biar sidebar dan grup1 sejajar */
+    gap: 50px; /* Jarak antara sidebar dan menu */
+    width: 100%;
+}
+
+.judul-text {
+    display: flex;
+    flex-direction: column; /* Supaya teks dan garis berada dalam satu kolom */
+    align-items: center; /* Posisikan kontennya ke tengah */
+    flex-grow: 1; /* Agar tetap di tengah */
+}
+
+.judul-text h1 {
+    font-size: 50px;
+    text-align: center;
+    font-weight: 100;
+    color: #000000;
+}
+
+.judul-text hr {
+    display: inline;
+    width: 100%; /* Menyesuaikan panjang dengan teks */
+    height: 1px;
+    background-color: rgb(28.63% 30.2% 32.55%);
+    margin-top: 40px; /* Beri sedikit jarak dari teks */
+    justify-content: center;
+}
+
+.sidebar {
+    width: 200px; /* Sesuaikan dengan ukuran yang diinginkan */
+    background-color: #51A8D1; /* Warna biru sesuai contoh */
+    border-radius: 25px; /* Membuat sudut melengkung */
+    border: #494D53 solid 2px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.sidebar h4 {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.menu-separator {
+    width: 100%;
+    height: 2px;
+    background-color: #494D53;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.sidebar li {
+    list-style: none;
+    width: 100%;
+}
+
+.sidebar li a {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background 0.2s ease;
+}
+
+.sidebar li a:hover {
+    background-color: #92bbcc; /* Warna hover lebih gelap */
+    border-radius: 30px;
+    height: auto;
+}
+
+.grup1 {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between; /*space-around !important ,"center (margin-right: 30px;)" atau space-between*/
+}
+
+/* Styling untuk card */
+.card1 {
+    width: 250px;
+    height: 320px;
+    border: 1px solid #000000;
+    background-color: #ddd;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 12px;
+}
+
+/* Styling untuk gambar */
+.card1 img {
+    width: 237px; 
+    height: 236px; 
+    display: block;
+    margin: 0 auto;
+}
+
+.card1 p {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* Styling untuk separator */
+.sep11 {
+    width: 100%;
+    height: 1px;
+    background-color: black;
+    margin: 8px 0;
+}
+
+/* Styling untuk harga */
+.price {
+    font-weight: bold;
+    color: #494D53;
+    padding-top: 5px;
+}
+
+/* Styling untuk tombol */
+.card1 .pesan-btn {
+    background-color: #0099ff;
+    width: 90px;
+    color: white;
+    border: none;
+    padding: 5px;
+    font-size: 20px;
+    border-radius: 35px;
+    border: 1px solid #000000;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Menambahkan transisi */
+}
+
+/* Efek hover dengan animasi */
+.card1 .pesan-btn:hover {
+    background-color: #007acc;
+}
+
+.card1 a {
+    margin-left: 50px;
+}
+
+.price-button {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.basket {
+    width: 250px;
+    position: relative; /* Pastikan ini ada */
+    align-self: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding-bottom: 10px;
+}
+
+.basket button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Efek hover dengan animasi pada keseluruhan tombol */
+.basket button:hover {
+    transform: scale(1.1); /* Membesarkan tombol ketika hover */
+}
+
+#cart-count {
+    position: absolute; /* Pastikan posisinya absolut */
+    top: 0; /* Tempatkan di atas */
+    right: 0; /* Tempatkan di kanan */
+    transform: translate(50%, -50%); /* Untuk menyesuaikan posisi */
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.basket img {
+    width: 70px; /* Sesuaikan ukuran */
+    height: auto;
+}
+
+footer {
+    width: 100%;
+    margin-top: 40px;
+    display: block;
+    text-align: center;
+    padding: 25px;
+    background-color: #5598B6;
+}
+
+footer p {
+    color: white;
+    font-size: 30px;
+    font-weight: 200;
+}

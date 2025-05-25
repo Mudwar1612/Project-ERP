@@ -1,0 +1,516 @@
+{% load humanize %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Keuangan Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<style>
+.containers {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px; /* ruang agar tidak nempel pinggir layar */
+}
+
+.card {
+    width: 100%;
+    max-width: 100%; /* biar fleksibel di semua ukuran */
+    margin: 0 auto;
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important; /* responsive height */
+    max-height: 280px; /* batas tinggi maksimum */
+}
+.cardss {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.cards {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.cards h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.cards p {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #00458a;
+}
+
+      /* Menetapkan gaya header dan paragraf di tengah */
+    .centered-header {
+        text-align: center;
+    }
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.input-btn { 
+    background-color: whitesmoke;
+    border: black;
+    color: black;
+    margin: 4px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.input-btn { 
+    background-color: whitesmoke;
+    border: black;
+    color: black;
+    margin: 4px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+        /* Styling untuk pop-up form */
+        .popup-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-content h3 {
+            margin-top: 0;
+        }
+
+        .popup-content button.close-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .popup-content button.close-btn:hover {
+            background-color: darkred;
+        }
+</style>
+
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/Logo1.png'%}" alt="Admin Keuangan" class="logo-image">
+            <h2>Admin Keuangan</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('data_penjualan')">Data Penjualan</a></li>
+            <li><a href="#" onclick="showSection('data_pengeluaran')">Data Pengeluaran</a></li>
+            <li><a href="#" onclick="showSection('arus_kas')">Arus Kas</a></li>
+            <li><a href="#" onclick="showSection('laporan_keuangan')">Laporan Keuangan</a></li>
+        </ul>
+        <!-- <button class="logout-btn">Log Out</button> -->
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="logout-btn" type="submit">Log Out</button>
+        </form>
+    </div>
+
+    <main class="main-content">
+
+<section id="dashboard" class="tab-content">
+<div class="top-bar">
+    <h2 class="centered-header">Dashboard</h2>
+</div>
+
+<div class="cardss">
+    <div class="cards">
+        <h3>Pendapatan Hari Ini</h3>
+        <p>Rp {{ pendapatan_hari_ini|intcomma }}</p>
+    </div>
+    <div class="cards">
+        <h3>Laporan Laba Rugi</h3>
+        <p>Rp. 412.908.000</p>
+    </div>
+</div>
+<div class="section">
+    <h2 class="centered-header">Grafik Pendapatan Mingguan</h2>
+    <div class="chart-placeholder">
+    <canvas id="grafikPendapatanMingguan" width="400" height="200"></canvas>
+    </div>
+</div>
+</section>
+
+        <section id="data_penjualan" class="tab-content hidden">
+            <div class="top-bar">
+                <h2 class="centered-header">data Penjualan</h2>
+            </div>
+
+
+            <!-- <div class="filter">
+                <label for="bulan">Bulan:</label>
+                <select id="bulan">
+                    <option value="">Pilih Bulan</option>
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+
+                </select>
+    
+                <label for="tahun">Tahun:</label>
+                <select id="tahun">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+
+                </select>
+    
+                <button class="btn-filter">Tampilkan</button> -->
+            
+            </div>
+            <table class="sales-data">
+                <thead>
+                    <tr>
+                        <th>Keterangan</th>
+                        <th>Pendapatan</th>
+                        <th>Jumlah (Rp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Penjualan</td>
+                        <td>Rp. {{ total_penjualan|intcomma }}</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Total Pendapatan</td>
+                        <td></td>
+                        <td>Rp {{ total_penjualan|intcomma }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </section>
+        <section id="data_pengeluaran" class="tab-content hidden">
+            <div class="top-bar">
+                <div class="tabs">
+                    <h2 class="centered-header">data pengeluaran</h2>
+                </div>
+            </div>
+
+            <!-- <div class="filter">
+                <label for="bulan">Bulan:</label>
+                <select id="bulan">
+                    <option value="">Pilih Bulan</option>
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+                
+                </select>
+    
+                <label for="tahun">Tahun:</label>
+                <select id="tahun">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                
+                </select>
+    
+                <button class="btn-filter">Tampilkan</button> -->
+            </div>
+    
+            <table class="cash-flow-data">
+                <thead>
+                    <tr>
+                        <th>Keterangan</th>
+                        <th>Jumlah (Rp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Penerimaan Kas dari Pendapatan</td>
+                    </tr>
+                    <tr>
+                        <td>Penjualan</td>
+                        <td>Rp. {{ total_penjualan|intcomma }}</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Total Penerimaan Kas</td>
+                        <td>Rp. {{ total_penjualan|intcomma }}</td>
+                    </tr>
+                    <tr>
+                        <td>Pengeluaran Kas untuk Operasional</td>
+                    </tr>
+                    <tr>
+                        <td>Pembelian Bahan Baku</td>
+                        <td>70.000.000</td>
+                    </tr>
+                    <tr>
+                        <td>Gaji Karyawan</td>
+                        <td>Rp. {{ total_gaji_karyawan|intcomma }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </section>
+        <section id="arus_kas" class="tab-content hidden">
+            <div class="top-bar">
+                <div class="tabs">
+                    <h2 class="centered-header">cash flow</h2>
+                </div>
+            </div>
+
+            <!-- <div class="filter">
+                <label for="bulan">Bulan:</label>
+                <select id="bulan">
+                    <option value="">Pilih Bulan</option>
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+                    
+                </select>
+    
+                <label for="tahun">Tahun:</label>
+                <select id="tahun">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    
+                </select>
+    
+                <button class="btn-filter">Tampilkan</button>
+            </div> -->
+
+            <table class="cash-flow-data">
+                <thead>
+                    <tr>
+                        <th >Waktu</th>
+                        <th >Keterangan</th>
+                        <th >Kategori</th>
+                        <th >Jumlah</th>
+                        <th>Saldo Akhir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for cf in cashflow_harian %}
+                    <tr>
+                        <td >{{ cf.waktu|time:"H:i" }}</td>
+                        <td >{{ cf.keterangan }}</td>
+                        <td >{{ cf.kategori }}</td>
+                        <td >Rp {{ cf.jumlah|intcomma }}</td>
+                        <td >Rp {{ cf.saldo|intcomma }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align: center;">Belum ada data cashflow hari ini</td></tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+        </section>
+        <section id="laporan_keuangan" class="tab-content hidden">
+            <div class="top-bar">
+                <h2 class="centered-header">laporan keuangan</h2>
+            </div>
+
+
+            <!-- <div class="filter">
+                <label for="bulan">Bulan:</label>
+                <select id="bulan">
+                    <option value="">Pilih Bulan</option>
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+        
+                </select>
+    
+                <label for="tahun">Tahun:</label>
+                <select id="tahun">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+    
+                <button class="btn-filter">Tampilkan</button> -->
+            </div>
+    
+            <table class="cash-flow-data">
+                <thead>
+                    <tr>
+                        <th>Keterangan</th>
+                        <th>Jumlah (Rp)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight">
+                    <td>Aset</td>
+                    </tr>
+                    <tr>
+                        <td>Kas</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                    <tr>
+                        <td>Piutang Usaha</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                    <tr>
+                        <td>Perlengkapan</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                        <tr>
+                        <td>Peralatan</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                    <tr>
+                        <td>Akumulasi Peralatan</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>                    
+                    <tr class="highlight">
+                        <td>Jumlah Aset</td>
+                        <td>Rp. 0</td>
+                    </tr><br>
+                    <tr class="highlight">
+                        <td>Liabilitas</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>utang Usaha</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Jumlah Liabilitas</td>
+                        <td>Rp. 0</td><br>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Ekuitas</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Modal Pemilik</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td>Jumlah Ekuitas</td>
+                        <td>Rp. 24.200.000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{ chart_labels|json_script:"chart-labels" }}
+    {{ chart_data|json_script:"chart-data" }}
+    <script>
+        const labels = JSON.parse(document.getElementById('chart-labels').textContent);
+        const data = JSON.parse(document.getElementById('chart-data').textContent);
+    </script>
+    <script>
+        const ctx = document.getElementById('grafikPendapatanMingguan').getContext('2d');
+        const grafikPendapatan = new Chart(ctx, 
+        {type: 'bar', 
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Pendapatan (Rp)',
+                data: data,
+                backgroundColor: '#4CAF50',
+                borderRadius: 5
+                }]
+
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+        });
+    </script>
+        <script>
+        function showSection(sectionId) {
+            document.querySelectorAll(".tab-content").forEach(section => section.classList.add("hidden"));
+            document.getElementById(sectionId).classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

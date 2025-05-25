@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <title>Pesanan Berhasil</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/sukses.css' %}">
+    </head>
+    <body>
+        <div class="all">
+            <div class="judul">
+                <div class="logo2">
+                    <img src="{% static 'images/Logo2.png'%}" alt="Logo2" width="200px" height="200px">
+                </div>
+                <div class="judul-text">
+                    <h1>Payment</h1>
+                    <hr>
+                    </hr>
+                </div>
+            </div>
+            <div class="container">
+                <div class="receipt-container">
+                    <h2>Pesanan Berhasil!</h2>
+                    <p>{{ order.kode_bill }}</p>
+                    <p><strong>No Meja:</strong> {{ order.no_meja }}</p>
+                    <p><strong>Nama Pemesan:</strong> {{ order.nama_pemesan }}</p>
+                    <p><strong>Metode Pembayaran:</strong> {{ order.metode_pembayaran }}</p>
+
+                    <h3>Detail Pesanan:</h3>
+                    <ul>
+                        {% for item in order_items %}
+                            <li>{{ item.nama_menu }} = {{ item.jumlah }} x Rp {{ item.harga }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="total1">
+                        <p class="total2">Rp.{{ order.total_harga }}</p>
+                        <img src="{% static 'images/paid.png'%}" alt="paid" width="118px" height="100px">
+                    </div>
+                </div>
+            </div>
+                <div class="buttons">
+                    <button class="btn save">Simpan</button>
+                    <button class="btn back"><a href="{% url 'ratting' kode_bill=order.kode_bill %}">Selesai</a></button>
+                </div>
+        </div>
+        <footer>
+            <p>© 2025 Ocean Bit Company.</p>
+        </footer>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        document.querySelector(".btn.save").addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const container = document.querySelector(".receipt-container"); // Ambil elemen penting
+
+            html2canvas(container, { scale: 2, backgroundColor: "#fff" }).then(canvas => {
+                let link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "pesanan.png";
+                link.click();
+            });
+        });
+    </script>
+</html>

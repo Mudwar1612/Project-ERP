@@ -1,0 +1,535 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <!-- TEXT -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/2menu.css' %}">
+        <title>MENU</title>
+    </head>
+    <body>
+        <div class="all">
+            <div class="judul">
+                <div class="logo2">
+                    <img src="{% static 'images/Logo2.png'%}" alt="Logo2" width="200px" height="200px">
+                </div>
+                <div class="judul-text">
+                    <h1>MENU</h1>
+                    <hr>
+                    </hr>
+                </div>
+            </div>
+            <div class="container1">
+                <div class="side-navigasi">
+                    <aside class="sidebar">
+                        <ul class="sidebar-links">
+                            <li>
+                                <a href="#" onclick="filterMenu('all')">
+                                    All
+                                </a>
+                            </li>
+                            <div class="menu-separator"></div>
+                            <li>
+                                <a href="#" onclick="filterMenu('Burgers & Sandwiches')">
+                                    Burgers & Sandwiches
+                                </a>
+                            </li>
+                            <div class="menu-separator"></div>
+                            <li>
+                                <a href="#"  onclick="filterMenu('Fried & Grilled')">
+                                    Fried & Grilled
+                                </a>
+                            </li>
+                            <div class="menu-separator"></div>
+                            <li>
+                                <a href="#" onclick="filterMenu('Sides & Snacks')">
+                                    Sides & Snacks
+                                </a>
+                            </li>
+                            <div class="menu-separator"></div>
+                            <li>
+                                <a href="#" onclick="filterMenu('Pasta & Wraps')">
+                                    Pasta & Wraps
+                                </a>
+                            </li>
+                            <div class="menu-separator"></div>
+                            <li>
+                                <a href="#" onclick="filterMenu('Desserts & Beverages')">
+                                    Desserts & Beverages
+                                </a>
+                            </li>
+                            <div class="menu-separator"></div>
+                            <li>
+                                <a href="#" onclick="filterMenu('Best Seller')">
+                                    Best Seller
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+                <div class="grup1">
+                    <div class="card1" data-category="Burgers & Sandwiches">
+                        <img src="{% static 'images/mm/1.png'%}" alt="" width="237px" height="168px">
+                        <p>Classic Burger</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Classic Burger" data-price="20000" data-image="{% static 'images/mm/1.png' %}" ><!-- NEW CODE  " data-image="{% static 'images/mm/1.png' %}" "-->
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Burgers & Sandwiches">
+                        <img src="{% static 'images/mm/2.png'%}" alt="" width="216px" height="216px">
+                        <p>Chicken Ball Burger</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp25.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Chicken Ball Burger" data-price="25000" data-image="{% static 'images/mm/2.png' %}" >
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Burgers & Sandwiches">
+                        <img src="{% static 'images/mm/3.png'%}" alt="" width="237px" height="168px">
+                        <p>Double Beef Burger</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp25.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Double Beef Burger" data-price="25000" data-image="{% static 'images/mm/3.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Burgers & Sandwiches">
+                        <img src="{% static 'images/mm/4.png'%}" alt="" width="237px" height="168px">
+                        <p>Beef Sandwich</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Beef Sandwich" data-price="20000" data-image="{% static 'images/mm/4.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Burgers & Sandwiches">
+                        <img src="{% static 'images/mm/5.png'%}" alt="" width="237px" height="168px">
+                        <p>Fish Fillet Sandwich</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp25.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Beef Sandwich" data-price="25000" data-image="{% static 'images/mm/5.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Fried & Grilled">
+                        <img src="{% static 'images/mm/6.png'%}" alt="" width="237px" height="201px">
+                        <p>Crispy Fried Chicken</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Crispy Fried Chicken" data-price="20000" data-image="{% static 'images/mm/6.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Fried & Grilled">
+                        <img src="{% static 'images/mm/7.png'%}" alt="" width="237px" height="168px">
+                        <p>Chicken Wings</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Chicken Wings" data-price="20000" data-image="{% static 'images/mm/7.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Fried & Grilled">
+                        <img src="{% static 'images/mm/8.png'%}" alt="" width="237px" height="168px">
+                        <p>Grilled Ribs</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp30.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Grilled Ribs" data-price="30000" data-image="{% static 'images/mm/8.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Fried & Grilled">
+                        <img src="{% static 'images/mm/9.png'%}" alt="" width="237px" height="168px">
+                        <p>Grilled Beef</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp40.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Grilled Beef" data-price="40000" data-image="{% static 'images/mm/9.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/10.png'%}" alt="" width="237px" height="168px">
+                        <p>Shrimp Tempura</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Grilled Beef" data-price="20000" data-image="{% static 'images/mm/10.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/11.png'%}" alt="" width="237px" height="168px">
+                        <p>French Fries</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp15.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="French Fries" data-price="15000" data-image="{% static 'images/mm/11.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/12.png'%}" alt="" width="237px" height="168px">
+                        <p>Crispy Nugget</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp15.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Crispy Nugget" data-price="15000" data-image="{% static 'images/mm/12.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/13.png'%}" alt="" width="237px" height="168px">
+                        <p>Onion Rings</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp15.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Onion Rings" data-price="15000" data-image="{% static 'images/mm/13.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/14.png'%}" alt="" width="237px" height="168px">
+                        <p>Slice Fried Potatoes</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp17.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Slice Fried Potatoes" data-price="17000" data-image="{% static 'images/mm/14.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/15.png'%}" alt="" width="237px" height="168px">
+                        <p>Salad</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Salad" data-price="20000" data-image="{% static 'images/mm/15.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Sides & Snacks">
+                        <img src="{% static 'images/mm/16.png'%}" alt="" width="237px" height="168px">
+                        <p>Cheese Macaroni</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Cheese Macaroni" data-price="20000" data-image="{% static 'images/mm/16.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Pasta & Wraps">
+                        <img src="{% static 'images/mm/17.png'%}" alt="" width="237px" height="168px">
+                        <p>Chicken Warp</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp25.000</p>
+                            </div>
+                            <a href="">
+                                <button class="pesan-btn" data-name="Chicken Warp" data-price="25000" data-image="{% static 'images/mm/17.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Pasta & Wraps">
+                        <img src="{% static 'images/mm/18.png'%}" alt="" width="237px" height="168px">
+                        <p>Tacos</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp15.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Tacos" data-price="15000" data-image="{% static 'images/mm/18.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Desserts & Beverages">
+                        <img src="{% static 'images/mm/19.png'%}" alt="" width="237px" height="168px">
+                        <p>Ice Cream Variant</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp25.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Ice Cream Variant" data-price="25000" data-image="{% static 'images/mm/19.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Desserts & Beverages">
+                        <img src="{% static 'images/mm/20.png'%}" alt="" width="237px" height="168px">
+                        <p>Apple Pie</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp35.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Apple Pie" data-price="35000" data-image="{% static 'images/mm/20.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Desserts & Beverages">
+                        <img src="{% static 'images/mm/21.png'%}" alt="" width="237px" height="168px">
+                        <p>Chocolate Chips</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp20.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Chocolate Chips" data-price="20000" data-image="{% static 'images/mm/21.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Desserts & Beverages">
+                        <img src="{% static 'images/mm/22.png'%}" alt="" width="237px" height="168px">
+                        <p>Drink Variant</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp10.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Drink Variant" data-price="10000" data-image="{% static 'images/mm/22.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card1" data-category="Desserts & Beverages">
+                        <img src="{% static 'images/mm/23.png'%}" alt="" width="237px" height="168px">
+                        <p>Juice Variant</p>
+                        <div class="sep11"></div>
+                        <div class="price-button">
+                            <div class="price">
+                                <p>Rp15.000</p>
+                            </div>
+                            <a href="#">
+                                <button class="pesan-btn" data-name="Juice Variant" data-price="15000" data-image="{% static 'images/mm/23.png' %}">
+                                    Pesan
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="basket">
+                        <a href="{% url 'payment' %}">
+                            <button>
+                                <img src="{% static 'images/basket.png' %}" alt="button">
+                                <span id="cart-count" class="badge">0</span>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <p>© 2025 Ocean Bit Company.</p>
+        </footer>
+    </body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ambil data stok yang dikirim dari Django
+            const stockData = {{ stock_data_json|safe }};
+            const buttons = document.querySelectorAll(".pesan-btn");
+            const cartCount = document.getElementById("cart-count");
+            const daftarPesanan = document.getElementById("daftar-pesanan");
+    
+            // Nonaktifkan tombol jika stok habis dan update data stok pada tombol
+            buttons.forEach(button => {
+                const itemName = button.getAttribute("data-name");
+                const match = stockData.find(item => item.name === itemName);
+    
+                if (match) {
+                    button.setAttribute("data-stock", match.stock);
+    
+                    if (match.stock <= 0) {
+                        button.disabled = true;
+                        button.textContent = 'Habis';
+                        button.style.cursor = 'not-allowed';
+                    }
+                }
+            });
+    
+            // Reset keranjang saat halaman direfresh
+            localStorage.removeItem("pesanan");
+    
+            // Fungsi update jumlah item di keranjang
+            function updateCartCount() {
+                let pesanan = JSON.parse(localStorage.getItem("pesanan")) || [];
+                let totalItems = pesanan.reduce((total, item) => total + item.quantity, 0);
+                cartCount.textContent = totalItems;
+            }
+    
+            // Fungsi untuk menambahkan item ke keranjang
+            buttons.forEach(button => {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+    
+                    // Cegah aksi kalau tombol disabled
+                    if (button.hasAttribute('disabled')) {
+                        alert("Stok habis, tidak bisa dipesan.");
+                        return;
+                    }
+    
+                    let name = this.getAttribute("data-name");
+                    let price = this.getAttribute("data-price");
+                    let image = this.getAttribute("data-image");
+    
+                    let pesanan = JSON.parse(localStorage.getItem("pesanan")) || [];
+                    let itemIndex = pesanan.findIndex(item => item.name === name);
+    
+                    if (itemIndex !== -1) {
+                        pesanan[itemIndex].quantity += 1;
+                    } else {
+                        pesanan.push({ name, price, quantity: 1, image });
+                    }
+    
+                    localStorage.setItem("pesanan", JSON.stringify(pesanan));
+                    updateCartCount();
+                    alert(name + " telah ditambahkan ke keranjang!");
+                });
+            });
+    
+            // Menampilkan daftar pesanan di halaman checkout
+            if (daftarPesanan) {
+                let pesanan = JSON.parse(localStorage.getItem("pesanan")) || [];
+    
+                if (pesanan.length === 0) {
+                    daftarPesanan.innerHTML = "<p>Keranjang kosong.</p>";
+                    return;
+                }
+    
+                pesanan.forEach(item => {
+                    let li = document.createElement("li");
+                    li.textContent = `${item.name} - Rp${item.price} x ${item.quantity}`;
+                    daftarPesanan.appendChild(li);
+                });
+            }
+    
+            // Set initial cart count to 0
+            cartCount.textContent = "0";
+        });
+    </script>
+    <script>
+        function filterMenu(category) {
+            let cards = document.querySelectorAll(".card1");
+    
+            cards.forEach(card => {
+                if (category === "all") {
+                    card.style.display = "block"; // Tampilkan semua menu
+                } else if (card.getAttribute("data-category") === category) {
+                    card.style.display = "block"; // Tampilkan hanya kategori yang dipilih
+                } else {
+                    card.style.display = "none"; // Sembunyikan yang lain
+                }
+            });
+        }
+    </script>
+</html>

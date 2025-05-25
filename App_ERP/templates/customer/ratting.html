@@ -1,0 +1,95 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ratting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/ratting.css' %}">
+  </head>
+  <body>
+    <div class="all">
+      <div class="judul">
+          <div class="logo2">
+              <img src="{% static 'images/Logo2.png'%}" alt="Logo2" width="200px" height="200px">
+          </div>
+          <div class="judul-text">
+              <h1>Ratting</h1>
+              <hr>
+              </hr>
+          </div>
+      </div>
+      <form method="POST">
+        {% csrf_token %}   
+        <!-- Display items from the order -->
+        {% for item in order.items.all %}
+          <div class="rating-item">
+            <div class="food-label">
+              {% if item.menu and item.menu.image %}
+                <img class="food-img" src="{% static item.menu.image %}" alt="{{ item.nama_menu }}">
+              {% else %}
+                <img class="food-img" src="{% static 'images/default.jpg' %}" alt="No Image">
+              {% endif %}
+              <strong>{{ item.nama_menu }}</strong>
+            </div>
+            <div class="rating-stars">
+              {% for i in "54321" %}
+                <input type="radio" name="rating_{{ item.id }}" id="star{{ i }}_{{ item.id }}" value="{{ i }}">
+                <label for="star{{ i }}_{{ item.id }}">★</label>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+        <div class="service-box">
+          <p>How was the service?</p>
+            <div class="rating-stars">
+              {% for i in "54321" %}
+                <input type="radio" name="rating_{{ item.id }}" id="star{{ i }}_{{ item.id }}" value="{{ i }}">
+                <label for="star{{ i }}_{{ item.id }}">★</label>
+              {% endfor %}
+            </div>
+        </div>
+        <button class="done-button" type="submit">DONE</button>
+      </form>
+    </div>
+    <footer>
+      <p>© 2025 Ocean Bit Company.</p>
+    </footer>
+  </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const cartItems = JSON.parse(localStorage.getItem("pesanan")) || [];
+
+      // Debugging localStorage content
+      console.log(cartItems); // Cek apakah data sudah ada
+
+      // Tambahkan gambar dari keranjang pesanan (localStorage) ke halaman
+      if (cartItems.length > 0) {
+        cartItems.forEach(item => {
+          const container = document.createElement("div");
+          container.className = "rating-item";
+          container.innerHTML = `
+            <div class="food-label">
+              <img class="food-img" src="${item.image}" alt="${item.name}">
+              <strong>${item.name}</strong>
+            </div>
+            <div class="rating-stars">
+              ${[5, 4, 3, 2, 1].map(i => `
+                <input type="radio" name="js_rating" id="js_star${i}" value="${i}">
+                <label for="js_star${i}">★</label>
+              `).join('')}
+            </div>
+          `;
+
+          document.querySelector(".container form").insertBefore(container, document.querySelector(".service-box"));
+        });
+      } else {
+        console.log("No items in the cart.");
+      }
+    });
+  </script>
+</html>

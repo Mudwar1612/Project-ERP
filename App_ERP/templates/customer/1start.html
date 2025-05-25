@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/1start.css' %}">
+        <title>Document</title>
+    </head>
+    <body>
+        <section class="halaman1">
+            <div class="latarbelakang">
+                <img src="{% static 'images/latarbelakang.jpg' %}" alt="orange slice">
+            </div>
+            <div class="group">
+                <div class="logo1">
+                    <img src="{% static 'images/Logo1.png'%}" alt="Logo Corporate">
+                </div>
+                <div>
+                    <a href="{% url 'menu' %}"><button>Menu →</button></a>
+                </div>
+            </div>
+        </section>
+    </body>
+    <script>
+        document.querySelector('button').addEventListener('touchstart', function() {
+            this.classList.add('hover');
+        });
+    
+        document.querySelector('button').addEventListener('touchend', function() {
+            this.classList.remove('hover');
+        });
+    </script>
+    <script>
+        const button = document.querySelector('.anim-button');
+        button.addEventListener('touchstart', function() {
+            this.classList.add('touched');
+        });
+    
+        button.addEventListener('touchend', function() {
+            this.classList.remove('touched');
+        });
+    </script>
+</html>

@@ -1,0 +1,891 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Hrd Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+<style>
+.containers {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px; /* ruang agar tidak nempel pinggir layar */
+}
+
+.card {
+  width: 100%;
+  max-width: 100%; /* biar fleksibel di semua ukuran */
+  margin: 0 auto;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important; /* responsive height */
+  max-height: 280px; /* batas tinggi maksimum */
+}
+
+      /* Menetapkan gaya header dan paragraf di tengah */
+    .centered-header {
+        text-align: center;
+    }
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.input-btn { 
+    background-color: whitesmoke;
+    border: black;
+    color: black;
+    margin: 4px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.input-btn { 
+    background-color: whitesmoke;
+    border: black;
+    color: black;
+    margin: 4px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+        /* Styling untuk pop-up form */
+        .popup-form {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-content h3 {
+            margin-top: 0;
+        }
+
+        .popup-content button.close-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .popup-content button.close-btn:hover {
+            background-color: darkred;
+        }
+</style>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/Logo1.png'%}" alt="Admin HRD" class="logo-image">
+            <h2>Admin HRD</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('data_karyawan')">Data Karyawan</a></li>
+            <li><a href="#" onclick="showSection('absensi')">Absensi</a></li>
+            <li><a href="#" onclick="showSection('slip_gaji')">Slip gaji</a></li>
+            <li><a href="#" onclick="showSection('rekap_gaji_karyawan')">Rekap gaji karyawan</a></li>
+        </ul>
+        <form action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button class="logout-btn" type="submit">Log Out</button>
+      </form>
+            <!-- <button class="logout-btn">Log Out</button> -->
+    </div>
+
+    <main class="main-content">
+
+        <section id="dashboard" class="tab-content">
+        <div class="top-bar">
+          <h2 class="centered-header">dashboard</h2>
+        </div>
+        <div class="containers">
+            <div class="card">
+            <h2 class="card-title">Total Karyawan</h2>
+            <canvas id="jabatanChart"></canvas>
+            </div>
+            <div class="card">   
+        <h2>Rekap Absensi</h2>
+        <canvas id="absensiChart" width="300" height="300"></canvas>
+        </div>
+
+        <div class="card">
+        <h2>Rekap Gaji Karyawan</h2>
+        <canvas id="gajiChart" width="300" height="300"></canvas>
+        </div>
+
+        </section>
+
+        <section id="data_karyawan" class="tab-content hidden">
+            <div class="top-bar">
+              <h2 class="centered-header">data karyawan</h2>
+            </div>
+            <div class="karyawan">
+      <input type="text" id="search" placeholder="Cari karyawan...">
+            <button id="searchBtn">Cari</button>
+    </div>
+  <!-- Tombol untuk menampilkan form -->
+  <button id="show-form-btn">Tambah Data Karyawan</button>
+              <!-- Pop-up Form -->
+              <div id="popup-form" class="popup-form">
+                <div class="popup-content">
+                    <h3>Form Tambah Karyawan</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ karyawan_form.as_p }}
+                        <button type="submit" name="create_karyawan">Tambah Karyawan</button>
+                    </form>
+                    <button class="close-btn" id="close-form-btn">Tutup</button>
+                </div>
+            </div>
+    <table class="cash-flow-data">
+        <thead>
+            <tr>
+                <th>Nama Karyawan</th>
+                <th>Jabatan</th>
+                <th>Divisi</th>
+                <th>Jenis Kelamin</th>
+                <th>Alamat</th>
+                <th>No Telepon</th>
+                <th>No Rekening</th>
+                <th><input type="checkbox" id="selectAllKaryawan"></th> <!-- Checkbox All di kanan -->
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for karyawan in karyawans %}
+            <tr>
+                <td>{{ karyawan.nama_karyawan }}</td>
+                <td>{{ karyawan.jabatan }}</td>
+                <td>{{ karyawan.divisi }}</td>
+                <td>{{ karyawan.j_kelamin }}</td>
+                <td>{{ karyawan.alamat}}</td>
+                <td>{{ karyawan.kontak}}</td>
+                <td>{{ karyawan.no_rekening }}</td>
+                <td><input type="checkbox" class="checkbox-karyawan" name="karyawan_ids" value="{{ karyawan.id }}"></td>
+                <td>
+                    <form method="post" action="{% url 'generate_slip_gaji' %}">
+                        {% csrf_token %}
+                        <!-- <input type="hidden" name="karyawan_id" value="{{ karyawan.id }}"> -->
+                        <!-- <button type="submit" class="btn-filter">Cetak</button> -->
+                        <!-- <button type="button" class="btn-filter" onclick="openEditFormKaryawan('{{ karyawan.id }}', '{{ karyawan.nama_karyawan }}', '{{ karyawan.jabatan }}', '{{ karyawan.gaji_pokok }}')">EditKaryawan</button> -->
+                      </form>
+                      <form method="post" action="{% url 'hapus_karyawan' karyawan.id %}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus karyawan ini?');">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-filter" style="background-color: #e74c3c;">Hapus</button>
+                      </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <!-- <div id="editKaryawanModal" class="popup-form" style="display:none;">
+  <div class="popup-content">
+    <h3>Edit Karyawan</h3>
+    <form method="post" action="{% url 'update_karyawan' %}">
+      {% csrf_token %}
+      <input type="hidden" id="edit_id" name="karyawan_id">
+      <label>Nama:</label>
+      <input type="text" id="edit_nama" name="nama_karyawan" required>
+      <label>Jabatan:</label>
+      <input type="text" id="edit_jabatan" name="jabatan" required>
+      <label>divisi:</label>
+      <input type="text" id="edit_divisi" name="divisi" required>
+      <label>Gaji Pokok:</label>
+      <input type="number" id="edit_gaji" name="gaji_pokok" required>
+      <button type="submit">Simpan Perubahan</button>
+    </form>
+    <button onclick="document.getElementById('editKaryawanModal').style.display='none'">Tutup</button>
+  </div>
+</div> -->
+</section>
+<section id="absensi" class="tab-content hidden">
+    <div class="top-bar">
+        <h2 class="centered-header">Absensi Karyawan</h2>
+    </div>
+
+    <!-- Kolom pencarian untuk absensi -->
+    <div class="absensi">
+    </div>
+
+    <!-- Tombol untuk menampilkan form -->
+    <!-- <button id="show-absensi-form-btn">Tambah Data Absensi</button> -->
+
+    <!-- Pop-up Form -->
+    <!-- <div id="popup-absensi-form" class="popup-form">
+        <div class="popup-content">
+            <h3>Form Tambah Absensi</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ absensi_form.as_p }}
+                <button type="submit" name="create_absensi">Tambah Absensi</button>
+            </form>
+            <button class="close-btn" id="close-absensi-form-btn">Tutup</button>
+        </div>
+    </div> -->
+
+    <table class="cash-flow-data">
+        <thead>
+            <tr>
+                <th>Nama Karyawan</th>
+                <th>Jabatan</th>
+                <th>Total Kehadiran</th>
+                <th>Total Izin</th>
+                <th>Total Alpha</th>
+                <th>Persentase Kehadiran</th>
+                <!-- <th><input type="checkbox" id="selectAllAbsensi"></th> Checkbox All di kanan -->
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for karyawan in karyawans %}
+            <tr>
+                <td>{{ karyawan.nama_karyawan }}</td>
+                <td>{{ karyawan.jabatan }}</td>
+                <td>{{ karyawan.total_kehadiran }}</td>
+                <td>{{ karyawan.total_izin }}</td>
+                <td>{{ karyawan.total_alpha }}</td>
+                <td>{{ karyawan.persentase_kehadiran|floatformat:2 }}%</td>
+                <!-- <td><input type="checkbox" class="checkbox-absensi" name="karyawan_ids" value="{{ karyawan.id }}"></td> -->
+                <td>
+                    <form method="post" action="{% url 'generate_slip_gaji' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="karyawan_id" value="{{ karyawan.id }}">
+                        <!-- <button type="submit" class="btn-filter">Cetak</button> -->
+                        <button type="button" class="btn-filter" onclick="openEditFormAbsensi('{{ karyawan.id }}', '{{ karyawan.nama_karyawan }}', '{{ karyawan.total_kehadiran }}', '{{ karyawan.total_izin }}', '{{ karyawan.total_alpha }}')">Edit Absensi</button>
+                    </form>
+                    <form method="post" action="{% url 'hapus_karyawan' karyawan.id %}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus absensi karyawan ini?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-filter" style="background-color: #e74c3c;">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal untuk mengedit absensi -->
+    <div id="editAbsensiModal" class="popup-form" style="display:none;">
+        <div class="popup-content">
+            <h3>Edit Absensi</h3>
+            <form method="post" action="{% url 'update_absensi' %}">
+                {% csrf_token %}
+                <input type="hidden" id="edit_absensi_id" name="karyawan_id">
+                <label>Nama:</label>
+                <input type="text" id="edit_absensi_nama" name="nama_karyawan" required>
+                <label>Total Kehadiran:</label>
+                <input type="number" id="edit_absensi_hadir" name="total_kehadiran" required>
+                <label>Total Izin:</label>
+                <input type="number" id="edit_absensi_izin" name="total_izin" required>
+                <label>Total Alpha:</label>
+                <input type="number" id="edit_absensi_alpha" name="total_alpha" required>
+                <button type="submit">Simpan Perubahan</button>
+            </form>
+            <button onclick="document.getElementById('editAbsensiModal').style.display='none'">Tutup</button>
+        </div>
+    </div>
+
+</section>
+
+<section id="slip_gaji" class="tab-content hidden">
+    <div class="top-bar">
+      <h2 class="centered-header">Slip Gaji</h2>
+    </div>
+<!-- Kolom pencarian untuk absensi -->
+    <div class="slip_gaji">
+    </div>
+<!-- Tombol untuk menambah data gaji -->
+<!-- <button id="show-slip_gaji-form-btn">Tambah Data Gaji</button>
+
+    
+    <div id="popup-slip_gaji-form" class="popup-form">
+        <div class="popup-content">
+            <h3>Form Tambah Data Gaji</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ karyawan_form.as_p }}
+                <button type="submit" name="create_gaji">Tambah Data Gaji</button>
+            </form>
+            <button class="close-btn" id="close-slip_gaji-form-btn">Tutup</button>
+        </div>
+    </div> -->
+<!-- Form untuk menambah data gaji karyawan -->
+<table class="cash-flow-data">
+        <thead>
+            <tr>
+                <th>Nama Karyawan</th>
+                <th>Jabatan</th>
+                <th>Divisi</th>
+                <th>Gaji Pokok</th>
+                <th>Lembur (jam)</th>
+                <th>Tunjangan Jabatan</th>
+                <th>total Gaji</th>
+                <!-- <th><input type="checkbox" id="selectAllKaryawan"></th> Checkbox All di kanan -->
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for karyawan in karyawans %}
+            <tr>
+                <td>{{ karyawan.nama_karyawan }}</td>
+                <td>{{ karyawan.jabatan }}</td>
+                <td>{{ karyawan.divisi }}</td>
+                <td>{{ karyawan.gaji_pokok|intcomma }}</td>
+                <td>{{ karyawan.lembur_jam }}</td>
+                <td>{{ karyawan.hitung_tunjangan }}</td>
+                <td>{{ karyawan.total_gaji|intcomma }}</td>
+                <!-- <td><input type="checkbox" class="checkbox-karyawan" name="karyawan_ids" value="{{ karyawan.id }}"></td> -->
+                <td>
+                    <form method="post" action="{% url 'generate_slip_gaji' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="karyawan_id" value="{{ karyawan.id }}">
+                        <!-- <button type="submit" class="btn-filter">Cetak</button> -->
+                        <button type="button" class="btn-filter" onclick="openEditFormKaryawan('{{ karyawan.id }}', '{{ karyawan.nama_karyawan }}', '{{ karyawan.jabatan }}', '{{ karyawan.gaji_pokok }}')">EditKaryawan</button>
+                      </form>
+                      <form method="post" action="{% url 'hapus_karyawan' karyawan.id %}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus karyawan ini?');">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-filter" style="background-color: #e74c3c;">Hapus</button>
+                      </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+        <div id="editKaryawanModal" class="popup-form" style="display:none;">
+  <div class="popup-content">
+    <h3>Edit Karyawan</h3>
+    <form method="post" action="{% url 'update_karyawan' %}">
+      {% csrf_token %}
+      <input type="hidden" id="edit_id" name="karyawan_id">
+      <label>Nama:</label>
+      <input type="text" id="edit_nama" name="nama_karyawan" required>
+      <label>Jabatan:</label>
+      <input type="text" id="edit_jabatan" name="jabatan" required>
+      <label>divisi:</label>
+      <input type="text" id="edit_divisi" name="divisi" required>
+      <label>Gaji Pokok:</label>
+      <input type="number" id="edit_gaji" name="gaji_pokok" required>
+      <button type="submit">Simpan Perubahan</button>
+    </form>
+    <button onclick="document.getElementById('editKaryawanModal').style.display='none'">Tutup</button>
+  </div>
+</div>   
+        </section>
+            
+            
+        <section id="rekap_gaji_karyawan" class="tab-content hidden">
+            <div class="top-bar">
+              <h2 class="centered-header">rekap gaji karyawan</h2>
+            </div>
+    <div class="rekap-gaji-container">
+    
+<!-- 
+        <div class="filter">
+            <label for="month">Pilih Bulan:</label>
+            <select id="month">
+                <option value="januari">Januari</option>
+                <option value="februari">Februari</option>
+                <option value="maret">Maret</option>
+                <option value="april">April</option>
+                <option value="mei">Mei</option>
+                <option value="juni">Juni</option>
+                <option value="juli">Juli</option>
+                <option value="agustus">Agustus</option>
+                <option value="september">September</option>
+                <option value="oktober">Oktober</option>
+                <option value="november">November</option>
+                <option value="desember">Desember</option>
+            </select>
+
+            <label for="year">Pilih Tahun:</label>
+            <select id="year">
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option> -->
+                <!-- Tambahkan tahun sesuai kebutuhan -->
+            </select>
+
+            <!-- <input type="text" id="search" placeholder="Cari karyawan...">
+            <button id="searchBtn">Cari</button> -->
+        </div>
+
+<table class="cash-flow-data">
+        <thead>
+            <tr>
+                <th>Nama Karyawan</th>
+                <th>Jabatan</th>
+                <th>Gaji Pokok</th>
+                <th>Total Kehadiran</th>
+                <th>Total Izin</th>
+                <th>Total Alpha</th>
+                <th>Lembur (jam)</th>
+                <th>Persentase Kehadiran</th>
+                <th>Total Gaji</th>
+                <th><input type="checkbox" id="selectAllKaryawan"></th> <!-- Checkbox All di kanan -->
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for karyawan in karyawans %}
+            <tr>
+                <td>{{ karyawan.nama_karyawan }}</td>
+                <td>{{ karyawan.jabatan }}</td>
+                <td>{{ karyawan.gaji_pokok|intcomma }}</td>
+                <td>{{ karyawan.total_kehadiran }}</td>
+                <td>{{ karyawan.total_izin }}</td>
+                <td>{{ karyawan.total_alpha }}</td>
+                <td>{{ karyawan.lembur_jam }}</td>
+                <td>{{ karyawan.persentase_kehadiran|floatformat:2 }}%</td>
+                <td>{{ karyawan.total_gaji|intcomma }}</td>
+                <td><input type="checkbox" class="checkbox-karyawan" name="karyawan_ids" value="{{ karyawan.id }}"></td>
+                <td>
+                    <form method="post" action="{% url 'generate_slip_gaji' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="karyawan_id" value="{{ karyawan.id }}">
+                        <button type="submit" class="btn-filter">Cetak</button>
+                        <button type="button" class="btn-filter" onclick="openEditForm('{{ karyawan.id }}', '{{ karyawan.nama_karyawan }}', '{{ karyawan.jabatan }}', '{{ karyawan.gaji_pokok }}')">Edit</button>
+                      </form>
+                      <form method="post" action="{% url 'hapus_karyawan' karyawan.id %}" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus karyawan ini?');">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-filter" style="background-color: #e74c3c;">Hapus</button>
+                      </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+  </section>
+  <script>
+  function openEditFormKaryawan(id, nama, jabatan, divisi, gaji) {
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_nama').value = nama;
+    document.getElementById('edit_jabatan').value = jabatan;
+    document.getElementById('edit_divisi').value = divisi;
+    document.getElementById('edit_gaji').value = gaji;
+    document.getElementById('editKaryawanModal').style.display = 'block';
+  }
+  </script>  
+  <script>
+    function showSection(sectionId) {
+                document.querySelectorAll(".tab-content").forEach(section => section.classList.add("hidden"));
+                document.getElementById(sectionId).classList.remove("hidden");
+    }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+  <script>
+    const jabatanLabels = {{ jabatan_labels|safe }};
+    const jabatanValues = {{ jabatan_values|safe }};
+  </script>
+  <script>
+    const jabatanCtx = document.getElementById('jabatanChart').getContext('2d');
+    new Chart(jabatanCtx, {
+    type: 'pie',
+    data: {
+      labels: jabatanLabels,
+        datasets: [{
+        data: jabatanValues,
+        backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' },
+        title: { display: true, text: 'Distribusi Jabatan Karyawan' }
+    }
+  }
+});
+
+  // ===== Rekap Absensi (Bar Chart) =====
+  const absensiCtx = document.getElementById('absensiChart').getContext('2d');
+  new Chart(absensiCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Hadir', 'Izin', 'Alpha'],
+      datasets: [{
+        label: 'Jumlah',
+      data: ['{{ total_hadir }}', '{{ total_izin }}', '{{ total_alpha }}'],
+      backgroundColor: ['#59a14f', '#edc948', '#b07aa1', '#ff9da7']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: 'Rekap Absensi Bulan Ini' },
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // ===== Rekap Gaji (Bar Chart) =====
+  const gajiLabels = {{ gaji_labels|safe }};
+  const gajiData = {{ gaji_values|safe }};
+
+  const gajiCtx = document.getElementById('gajiChart').getContext('2d');
+  new Chart(gajiCtx, {
+    type: 'bar',
+    data: {
+      labels: gajiLabels,
+      datasets: [{
+        label: 'Total Gaji (Rp)',
+        data: gajiData,
+        backgroundColor: ['#a0cbe8', '#ffbe7d', '#ff9d9a', '#9c755f']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: { display: true, text: 'Rekap Total Gaji Karyawan per Jabatan' }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function (value) {
+              return 'Rp ' + value.toLocaleString('id-ID');
+            }
+          }
+        }
+      }
+    }
+  });
+  // ===== Toggle Form Tambah Karyawan =====
+  const toggleFormBtn = document.getElementById("toggleFormBtn");
+  const addKaryawanForm = document.getElementById("addKaryawanForm");
+  toggleFormBtn.addEventListener("click", function () {
+    addKaryawanForm.classList.toggle("hidden");
+    const formVisible = !addKaryawanForm.classList.contains("hidden");
+    toggleFormBtn.textContent = formVisible ? "Sembunyikan Form" : "Tambah Karyawan";
+  });
+
+  // ===== Tambah Karyawan =====
+  const tambahKaryawanBtn = document.getElementById("tambahKaryawanBtn");
+  const inputNamaKaryawan = document.getElementById("namaKaryawan");
+  const jabatanKaryawan = document.getElementById("jabatanKaryawan");
+  const departemenKaryawan = document.getElementById("departemenKaryawan");
+  const tanggalMasuk = document.getElementById("tanggalMasuk");
+  const statusKaryawan = document.getElementById("statusKaryawan");
+  const table = document.getElementById("tabelKaryawan").getElementsByTagName("tbody")[0];
+
+  tambahKaryawanBtn.addEventListener("click", function () {
+    const nama = inputNamaKaryawan.value;
+    const jabatan = jabatanKaryawan.value;
+    const departemen = departemenKaryawan.value;
+    const tanggal = tanggalMasuk.value;
+    const status = statusKaryawan.value;
+
+    if (nama && jabatan && departemen && tanggal && status) {
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td>${nama}</td>
+        <td>${jabatan}</td>
+        <td>${departemen}</td>
+        <td>${tanggal}</td>
+        <td>${status}</td>
+        <td class="action-buttons">
+          <button class="btn-edit">Edit</button>
+          <button class="btn-delete">Hapus</button>
+        </td>
+      `;
+
+      // Reset form
+      inputNamaKaryawan.value = '';
+      jabatanKaryawan.value = '';
+      departemenKaryawan.value = '';
+      tanggalMasuk.value = '';
+      statusKaryawan.value = '';
+
+      // Sembunyikan form
+      addKaryawanForm.classList.add("hidden");
+      toggleFormBtn.textContent = "Tambah Karyawan";
+    } else {
+      alert("Semua kolom harus diisi!");
+    }
+  });
+
+  function renderTabelAbsensi() {
+    const bulan = parseInt(bulanSelect.value);
+    const tahun = parseInt(tahunSelect.value);
+    const jumlahHari = getJumlahHari(bulan, tahun);
+
+    // Buat ulang <thead>
+    theadAbsensi.innerHTML = '';
+    const trHead = document.createElement('tr');
+    trHead.innerHTML = `<th>Nama</th>`;
+    for (let t = 1; t <= jumlahHari; t++) {
+      trHead.innerHTML += `<th>${t}</th>`;
+    }
+    theadAbsensi.appendChild(trHead);
+
+    // Buat ulang <tbody>
+    tbodyAbsensi.innerHTML = '';
+    daftarNamaKaryawan.forEach(nama => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${nama}</td>`;
+      for (let i = 1; i <= jumlahHari; i++) {
+        const td = document.createElement('td');
+        td.className = '-'; // default class
+        td.appendChild(buatDropdown(i, nama));
+        tr.appendChild(td);
+      }
+      tbodyAbsensi.appendChild(tr);
+    });
+  }
+
+        
+        $(document).ready(function() {
+        $('#salarySlipTable').DataTable();
+    });
+
+    // Fungsi untuk Toggle Form Tambah Data Gaji
+    function toggleForm() {
+        var form = document.getElementById('salaryForm');
+        var button = document.getElementById('toggleFormButton');
+        
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            button.innerHTML = 'Sembunyikan Form';
+        } else {
+            form.style.display = 'none';
+            button.innerHTML = 'Tambah Data Gaji';
+        }
+    }
+
+    // Fungsi untuk Edit Slip Gaji
+    function editSlip(id) {
+        alert("Edit Slip Gaji Karyawan dengan ID: " + id);
+        // Logika untuk mengedit slip gaji
+    }
+
+    // Fungsi untuk Hapus Slip Gaji
+    function hapusSlip(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus slip gaji ini?")) {
+            alert("Slip Gaji Karyawan dengan ID: " + id + " telah dihapus.");
+            // Logika untuk menghapus slip gaji
+        }
+    }
+
+    // Fungsi untuk Cetak Slip Gaji
+    function cetakSlip(id) {
+        alert("Cetak Slip Gaji Karyawan dengan ID: " + id);
+        // Logika untuk mencetak slip gaji
+    }
+
+    // Fungsi untuk Menyimpan Data Gaji
+    document.getElementById('addSalaryForm').onsubmit = function(event) {
+        event.preventDefault(); // Mencegah form agar tidak dikirimkan ke server
+        var employeeName = document.getElementById('employeeName').value;
+        var employeePosition = document.getElementById('employeePosition').value;
+        var salaryMonth = document.getElementById('salaryMonth').value;
+        var baseSalary = document.getElementById('baseSalary').value;
+        var allowance = document.getElementById('allowance').value;
+        var deduction = document.getElementById('deduction').value;
+
+        alert("Data Gaji Karyawan Ditambahkan: " + employeeName + ", " + salaryMonth);
+        // Logika untuk menyimpan data (misalnya kirim ke server atau tambahkan ke tabel)
+    };
+            document.getElementById('searchBtn').addEventListener('click', function() {
+    const searchValue = document.getElementById('search').value.toLowerCase();
+    const rows = document.querySelectorAll('tbody tr');
+
+    rows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        if (name.includes(searchValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
+<script>
+  document.getElementById("selectAll").addEventListener("change", function () {
+      let checkboxes = document.querySelectorAll(".checkbox-user");
+      checkboxes.forEach(cb => cb.checked = this.checked);
+  });
+</script>
+<script>
+  document.getElementById("selectAllKaryawan").addEventListener("change", function() {
+      const checkboxes = document.querySelectorAll(".checkbox-karyawan");
+      checkboxes.forEach(cb => cb.checked = this.checked);
+  });
+</script>
+<script>
+  // Buka modal
+  function openModal() {
+      document.getElementById("myModal").style.display = "block";
+  }
+
+  // Tutup modal
+  function closeModal() {
+      document.getElementById("myModal").style.display = "none";
+  }
+
+  // Tutup jika klik di luar modal
+  window.onclick = function(event) {
+      const modal = document.getElementById("myModal");
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  }
+
+  // Tombol close (X)
+  document.addEventListener("DOMContentLoaded", function () {
+      document.querySelector(".close-btn").addEventListener("click", closeModal);
+  });
+</script>
+<script>
+  function showSection(sectionId) {
+      document.querySelectorAll(".tab-content").forEach(section => section.classList.add("hidden"));
+      document.getElementById(sectionId).classList.remove("hidden");
+  }
+</script>
+<script>
+  
+  // JavaScript untuk menampilkan dan menutup form pop-up
+  const showFormBtn = document.getElementById('show-form-btn');
+  const popupForm = document.getElementById('popup-form');
+  const closeFormBtn = document.getElementById('close-form-btn');
+
+  // Menampilkan pop-up form
+  showFormBtn.addEventListener('click', () => {
+      popupForm.style.display = 'flex';  // Menampilkan pop-up
+  });
+
+  // Menutup pop-up form
+  closeFormBtn.addEventListener('click', () => {
+      popupForm.style.display = 'none';  // Menyembunyikan pop-up
+  });
+
+  // Menutup pop-up jika klik di luar form
+  window.addEventListener('click', (e) => {
+      if (e.target === popupForm) {
+          popupForm.style.display = 'none';  // Menyembunyikan pop-up saat klik luar
+      }
+  });
+  
+
+//fungsi untuk absensi
+function openEditFormAbsensi(id, nama, hadir, izin, alpha) {
+    document.getElementById('edit_absensi_id').value = id;
+    document.getElementById('edit_absensi_nama').value = nama;
+    document.getElementById('edit_absensi_hadir').value = hadir;
+    document.getElementById('edit_absensi_izin').value = izin;
+    document.getElementById('edit_absensi_alpha').value = alpha;
+    document.getElementById('editAbsensiModal').style.display = 'block';
+}
+// Fungsi untuk menutup modal Edit
+document.getElementById('close-absensi-form-btn').addEventListener('click', function () {
+    document.getElementById('popup-absensi-form').style.display = 'none';
+});
+
+// Fungsi untuk membuka form tambah absensi
+document.getElementById('show-absensi-form-btn').addEventListener('click', function () {
+    document.getElementById('popup-absensi-form').style.display = 'flex';
+});
+
+// Fungsi untuk menutup form tambah absensi
+document.getElementById('close-absensi-form-btn').addEventListener('click', function () {
+    document.getElementById('popup-absensi-form').style.display = 'none';
+});
+// Fungsi untuk membuka form tambah gaji
+document.getElementById('show-slip_gaji-form-btn').addEventListener('click', function () {
+    document.getElementById('popup-slip_gaji-form').style.display = 'flex';
+});
+
+// Fungsi untuk menutup form tambah gaji
+document.getElementById('close-slip_gaji-form-btn').addEventListener('click', function () {
+    document.getElementById('popup-slip_gaji-form').style.display = 'none';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    width: 100%;
+    height: 100%;
+}
+
+.all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 50px;
+    padding-left: 50px;
+    width: 100%;
+    height: 100%;
+}
+
+.judul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Mengatur elemen agar tidak berdesakan */
+    gap: 50px; /* Jarak antara sidebar dan menu */
+}
+
+.judul-text {
+    display: flex;
+    flex-direction: column; /* Supaya teks dan garis berada dalam satu kolom */
+    align-items: center; /* Posisikan kontennya ke tengah */
+    flex-grow: 1; /* Agar tetap di tengah */
+}
+
+.judul-text h1 {
+    font-size: 64px;
+    text-align: center;
+    font-weight: 100;
+    color: #000000;
+}
+
+.judul-text hr {
+    display: inline;
+    width: 100%; /* Menyesuaikan panjang dengan teks */
+    height: 1px;
+    background-color: rgb(28.63% 30.2% 32.55%);
+    margin-top: 40px; /* Beri sedikit jarak dari teks */
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.rating-item {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    margin: 10px 0;
+    padding: 12px 16px;
+    border-radius: 15px;
+    width: 100%; /* FULL width dari form */
+    box-sizing: border-box;
+    height: 126.23px; /* Biar tingginya stabil walau teks pendek */
+    justify-content: space-between;
+}
+
+.rating-stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.rating-stars input[type="radio"] {
+    display: none;
+}
+
+.rating-stars label {
+    font-size: 45px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin-right: 5px;
+}
+
+.rating-stars input:checked ~ label,
+.rating-stars label:hover,
+.rating-stars label:hover ~ label {
+    color: #1e90ff;
+}
+
+.rating-stars label {
+    direction: ltr;
+}
+
+.service-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    margin: 10px auto;
+    padding: 10px 20px;
+    border-radius: 15px;
+    width: 55%;
+    height: 195px;
+}
+
+.service-box p {
+    font-size: 48px;
+    font-weight: 100;
+}
+
+.service-rating {
+    display: flex;
+    align-items: center;
+}
+
+.done-button {
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+img.food-img {
+    width: 120px;
+    height: 110px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.food-label {
+    display: flex;
+    align-items: center;
+}
+
+.food-label strong {
+    font-size: 25px;
+    color: #494D53;
+}
+
+footer {
+    width: 100%;
+    margin-top: 40px;
+    display: block;
+    text-align: center;
+    padding: 25px;
+    background-color: #5598B6;
+}
+
+footer p {
+    color: white;
+    font-size: 30px;
+    font-weight: 200;
+}

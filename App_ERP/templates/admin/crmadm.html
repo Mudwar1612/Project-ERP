@@ -1,0 +1,453 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Keuangan Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<style>
+    .container {
+    display: flex;
+    flex-direction: column;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+th {
+    background-color: #004080;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+tr.highlight {
+    background-color: #e0f7fa;
+    font-weight: bold;
+}
+
+tr.header-row td {
+    background-color: #cce5ff;
+    font-weight: bold;
+    font-size: 15px;
+}
+.cardss {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.cards {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.cards h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.cards p {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #00458a;
+}
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.analytics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.analytics-item {
+    background-color: #dcdcdc;
+    padding: 15px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.grafik {
+    background-color: #a9a9a9;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 24px;
+}
+
+select {
+    margin-top: 10px;
+}
+
+.loyalty {
+    background-color: #a9a9a9;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+</style>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/Logo1.png'%}" alt="Admin" class="logo-image">
+            <h2>CRM</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('data_penjualan')">Data Pelanggan</a></li>
+            <li><a href="#" onclick="showSection('riwayat_pembelian')">Riwayat Pembelian</a></li>
+        </ul>
+            <button class="logout-btn">Log Out</button>
+    </div>
+
+    <main class="main-content">
+
+        <section id="dashboard" class="tab-content">
+            <div class="top-bar">
+                <h2>Dashboard</h2>
+            </div>
+            <div class="cardss">
+                <div class="cards">
+                    <h3>Total Penjualan</h3>
+                    <p>{{ total_penjualan }}</p>
+                </div>
+                <div class="cards">
+                    <h3>Pendapatan Hari Ini</h3>
+                    <p>Rp {{ total_penjualan|intcomma }}</p>
+                </div>
+                <div class="cards">
+                    <h3>total produk</h3>
+                    <p>{{ total_produk }} item</p>
+                </div>
+                <div class="cards">
+                    <h3>total pelanggan</h3>
+                    <p>{{ total_pelanggan }}</p>
+                </div>
+            </div>
+        <!-- Produk Terlaris -->
+        <div class="section">
+            <h2>Produk Terlaris Minggu Ini</h2>
+            <table>
+                <tr><th>Produk</th><th>Jumlah Terjual</th><th>Pendapatan</th></tr>
+                {% for item in produk_terlaris %}
+                <tr>
+                    <td>{{ item.nama_menu }}</td>
+                    <td>{{ item.total_terjual }}</td>
+                    <td>Rp {{ item.total_pendapatan|intcomma }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Grafik Insight -->
+        <div class="analytics-container">
+    <!-- Analitik Pendapatan -->
+        <div class="analytics-card">
+            <h3>Analitik Pendapatan</h3>
+            <select>
+                <option>This Month</option>
+                <option>Last Month</option>
+            </select>
+                <canvas id="revenueChart"></canvas>
+            <div style="margin-top: 10px; text-align:center;">Customer Loyal</div>
+        </div>
+
+    <!-- Trend Penjualan -->
+        <div class="analytics-card">
+            <h3>Trend Penjualan</h3>
+            <select>
+                <option>This Month</option>
+                <option>Last Month</option>
+            </select>
+            <canvas id="salesTrendChart"></canvas>
+        </div>
+
+        <!-- Analitik Penjualan -->
+        <div class="row">
+            <div class="analytics-card">
+                <h3>Analitik Penjualan</h3>
+            <select>
+                <option>This Month</option>
+                <option>Last Month</option>
+            </select>
+                <canvas id="salesAnalyticsChart" width="50" height="50"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <section id="data_penjualan" class="tab-content hidden">
+            <div class="top-bar">
+                <h2 class="centered-header">Data Pelanggan</h2>
+            </div>
+
+            <div class="filter-section">
+                <label for="bulan">Bulan</label>
+                <select id="bulan">
+                    <option>Pilih Bulan</option>
+                    <option>Januari</option>
+                    <option>Februari</option>
+                    <option>Maret</option>
+                    <option>April</option>
+                    <option>Mei</option>
+                    <option>Juni</option>
+                    <option>Juli</option>
+                    <option>Agustus</option>
+                    <option>September</option>
+                    <option>Oktober</option>
+                    <option>November</option>
+                    <option>Desember</option>
+                </select>
+            
+                <label for="tahun">Tahun</label>
+                <select id="tahun">
+                    <option>Pilih Tahun</option>
+                    <option>2023</option>
+                    <option>2024</option>
+                    <option>2025</option>
+                </select>
+            
+                <button onclick="tampilkanData()">Tampilkan</button>
+                </div>
+            
+                <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Pelanggan</th>
+                        <th>Tanggal Bergabung</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabelPelanggan">
+                    {% for pelanggan in pelanggan_list %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ pelanggan.nama_pemesan }}</td>
+        <td>{{ pelanggan.tanggal_bergabung|date:"d M Y" }}</td>
+    </tr>
+{% endfor %}
+                    </tbody>
+                </table>
+                </div>
+
+                <h3>Rating Makanan oleh Pelanggan</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Nama Pelanggan</th>
+            <th>Menu</th>
+            <th>Rating (Bintang)</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for rating in rating_list %}
+        <tr>
+            <td>{{ rating.item.order.nama_pemesan }}</td>
+            <td>{{ rating.item.nama_menu }}</td>
+            <td>{{ rating.bintang }} ⭐</td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="3" style="text-align: center;">Belum ada data rating.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+                <div class="table-wrapper">
+                <table>
+                    <thead>
+            
+                    </thead>
+                    <tbody id="tabelInfoLanjutan">
+                        <!-- Data akan diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="riwayat_pembelian" class="tab-content hidden">
+            <div class="top-bar">
+                <h2 class="centered-header">Riwayat Pembelian</h2>
+            </div>
+            <div class="filter-section">
+                <label for="bulan">Bulan</label>
+                <select id="bulan">
+                    <option>Pilih Bulan</option>
+                    <option>Januari</option>
+                    <option>Februari</option>
+                    <option>Maret</option>
+                    <option>April</option>
+                    <option>Mei</option>
+                    <option>Juni</option>
+                    <option>Juli</option>
+                    <option>Agustus</option>
+                    <option>September</option>
+                    <option>Oktober</option>
+                    <option>November</option>
+                    <option>Desember</option>
+                </select>
+            
+                <label for="tahun">Tahun</label>
+                <select id="tahun">
+                    <option>Pilih Tahun</option>
+                    <option>2023</option>
+                    <option>2024</option>
+                    <option>2025</option>
+                </select>
+            
+                <button onclick="tampilkanRiwayat()">Tampilkan</button>
+            </div>
+            
+            <table>
+                <thead>
+                  <tr>
+                    <th>Tanggal</th>
+                    <th>Nama Pelanggan</th>
+                    <th>Produk</th>
+                    <th>Jumlah</th>
+                    <th>Total Harga</th>
+                  </tr>
+                </thead>
+                <tbody id="tabelRiwayat">
+                    {% for item in riwayat_pembelian %}
+                    <tr>
+                        <td>{{ item.order.tanggal_pesanan|date:"d M Y" }}</td>
+                        <td>{{ item.order.nama_pemesan }}</td>
+                        <td>{{ item.nama_menu }}</td>
+                        <td>{{ item.jumlah }}</td>
+                        <td>Rp {{ item.harga|intcomma }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align: center;">Tidak ada data pembelian.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+            
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            function showSection(sectionId) {
+                document.querySelectorAll(".tab-content").forEach(section => section.classList.add("hidden"));
+                document.getElementById(sectionId).classList.remove("hidden");
+            }
+
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+                const revenueChart = new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                    labels: {{ pendapatan_labels|safe }},
+                    datasets: [{
+                        label: 'Pendapatan (Rp)',
+                        data: {{ pendapatan_data|safe }},
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: '#00b894',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#00b894'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                    }
+                },
+                responsive: true
+            }
+        });
+
+        const trendCtx = document.getElementById('salesTrendChart').getContext('2d');
+        const trendChart = new Chart(trendCtx, {
+            type: 'bar',
+            data: {
+                labels: {{ trend_labels|safe }},
+                datasets: [{
+                    label: 'Jumlah Item Terjual',
+                    data: {{ trend_data|safe }},
+                    backgroundColor: '#ff7675',
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                        y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const analyticsCtx = document.getElementById('salesAnalyticsChart').getContext('2d');
+        const analyticsChart = new Chart(analyticsCtx, {
+            type: 'doughnut', // bisa juga 'bar' atau 'pie'
+                data: {
+                    labels: {{ penjualan_labels|safe }},
+                    datasets: [{
+                        label: 'Produk Terjual',
+                        data: {{ penjualan_data|safe }},
+                        backgroundColor: [
+                        '#ff7675',
+                        '#74b9ff',
+                        '#55efc4',
+                        '#ffeaa7',
+                        '#a29bfe'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '30%',
+                    radius: '80%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+
+        </script>
+</body>
+</html>

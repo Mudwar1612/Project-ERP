@@ -1,0 +1,443 @@
+{% load humanize %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Keuangan Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.box {
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    min-width: 300px; 
+}
+
+.box h2 {
+    margin: 0;
+    font-weight: bold;
+    color: black;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+th {
+    background-color: #004080;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+tr.highlight {
+    background-color: #e0f7fa;
+    font-weight: bold;
+}
+
+tr.header-row td {
+    background-color: #cce5ff;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.input-btn { 
+    background-color: whitesmoke;
+    border: black;
+    color: black;
+    margin: 4px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.cardss {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.cards {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.cards h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.cards p {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #00458a;
+}
+
+h2 {
+  text-align: center;
+}
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/Logo1.png'%}" alt="Admin Keuangan" class="logo-image">
+            <h2>manajemen produksi</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('data_penjualan')">Pesanan</a></li>
+            <li><a href="#" onclick="showSection('data_pengeluaran')">Produk</a></li>
+            <li><a href="#" onclick="showSection('data_bahan')">Persediaan Bahan Baku</a></li>
+            <li><a href="#" onclick="showSection('rekap_produksi')">Rekap Laporan Produksi</a></li>
+        </ul>
+        <button class="logout-btn">Log Out</button>
+    </div>
+
+    <main class="main-content">
+
+        <section id="dashboard" class="tab-content">
+        <div class="top-bar">
+            <h2>dashboard</h2>
+        </div>
+        <div class="cardss">
+          <div class="cards">
+              <h3>Permasalahan</h3>
+              <p>1</p>
+          </div>
+          <div class="cards">
+              <h3>Total produksi hari ini</h3>
+              <p>Rp {{ pendapatan_hari_ini|intcomma }}</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow mb-6">
+          <h2 class="text-2xl font-semibold mb-4">Jadwal Produksi</h2>
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-left">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="p-2">ID Produk</th>
+                  <th class="p-2">Produk</th>
+                  <th class="p-2">Jumlah</th>
+                  <th class="p-2">Status</th>
+                  <th class="p-2">Tgl Produksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in food_stock_list %}
+                <tr class="border-b">
+                  <td class="p-2">{{ item.menu_item.id }}</td>
+                  <td class="p-2">{{ item.menu_item.name }}</td>
+                  <td class="p-2">{{ item.stock_in }}</td>
+                  <td class="p-2 text-blue-600">{{ item.status }}</td>
+                  <td class="p-2">{{ item.date|date:"d/m/Y" }}</td>
+                </tr>
+                  {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
+        </section>
+        
+        <section id="data_penjualan" class="tab-content hidden">
+            <div class="top-bar">
+              <h2>Daftar Pesanan</h2>
+            </div>
+          
+            <div class="filter">
+              <label for="bulan_pesanan">Bulan:</label>
+              <select id="bulan_pesanan">
+                <option value="">Pilih Bulan</option>
+                <option value="january">January</option>
+                <option value="february">February</option>
+              </select>
+          
+              <label for="tahun_pesanan">Tahun:</label>
+              <select id="tahun_pesanan">
+                <option value="">Pilih Tahun</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+          
+              <button class="btn-filter">Tampilkan</button>
+            </div>
+          
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Kode Bill</th>
+      <th>Nama Produk</th>
+      <th>Tanggal & Waktu Pesanan</th>
+      <th>Jumlah</th>
+      <th>Harga Satuan</th>
+      <th>Metode Pembayaran</th>
+      <th>Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+      {% for item in order.items.all %}
+        <tr>
+          <td>{{ order.kode_bill }}</td>
+          <td>{{ item.nama_menu }}</td>
+          <td>{{ order.tanggal_pesanan|date:"d/m/Y H:i" }}</td>
+          <td>{{ item.jumlah }}</td>
+          <td>{{ item.harga|floatformat:0 }}</td>
+          <td>{{ order.metode_pembayaran }}</td>
+          <td><button class="btn-aksi">Lihat Detail</button></td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="7">Tidak ada pesanan.</td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+          </section>
+          
+          <section id="data_pengeluaran" class="tab-content hidden">
+            <div class="top-bar">
+              <h2>Data Produk</h2>
+            </div>
+          
+            <div class="filter">
+              <label for="bulan_produk">Bulan:</label>
+              <select id="bulan_produk">
+                <option value="">Pilih Bulan</option>
+                <option value="january">January</option>
+                <option value="february">February</option>
+              </select>
+          
+              <label for="tahun_produk">Tahun:</label>
+              <select id="tahun_produk">
+                <option value="">Pilih Tahun</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
+          
+              <button class="btn-filter">Tampilkan</button>
+            </div>
+          
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>Nama Produk</th>
+                  <th>Kode Produk</th>
+                  <th>Stok Awal</th>
+                  <th>Stok Akhir</th>
+                  <th>Jumlah Terjual</th>
+                  <th>Tanggal Produksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in food_stock_list %}
+                <tr>
+                  <td>{{ item.menu_item.name }}</td>
+                  <td>{{ item.menu_item.code }}</td>
+                  <td>{{ item.stock_in }}</td>
+                  <td>{{ item.stock_out }}</td>
+                  <td>{{ item.remaining_stock }}</td>
+                  <td>{{ item.date|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </section>
+          
+          <section id="data_bahan" class="tab-content hidden">
+  <div class="top-bar">
+    <h2>Persediaan Bahan Baku</h2>
+  </div>
+
+  <div class="filter">
+    <label for="bulan_bahan">Bulan:</label>
+    <select id="bulan_bahan">
+      <option value="">Pilih Bulan</option>
+      <option value="january">January</option>
+      <option value="february">February</option>
+    </select>
+
+    <label for="tahun_bahan">Tahun:</label>
+    <select id="tahun_bahan">
+      <option value="">Pilih Tahun</option>
+      <option value="2024">2024</option>
+      <option value="2025">2025</option>
+    </select>
+
+    <button class="btn-filter">Tampilkan</button>
+  </div>
+
+  <!-- Tabel Utama Persediaan Bahan Baku -->
+  <table class="bahan-table">
+    <thead>
+      <tr>
+        <th>Nama Barang</th>
+        <th>Kode Barang</th>
+        <th>Harga Satuan</th>
+        <th>Stok Awal</th>
+        <th>Stok Akhir</th>
+        <th>Jumlah</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in data_stok %}
+        <tr>
+          <td>{{ item.nama_bahan }}</td>
+          <td>{{ item.kode_bahan_baku }}</td>
+          <td>Rp{{ item.harga_per_unit|intcomma }}</td>
+          <td>{{ item.stok_minimum }}</td>
+          <td>{{ item.stok_akhir }}</td>  <!-- Mengganti dengan stok_akhir atau atribut yang sesuai -->
+          <td>Rp {{ item.total_harga|intcomma }}</td> <!-- Atribut jumlah_akhir -->
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+
+        <section id="rekap_produksi" class="tab-content hidden">
+            <div class="top-bar">
+                <h2>Rekap Laporan Produksi</h2>
+            </div>
+        
+            <div class="filter">
+                <input type="text" id="search_produksi" placeholder="Search..." />
+                <button class="btn-search">🔍</button>
+        
+                <label for="bulan_produksi">Bulan:</label>
+                <select id="bulan_produksi">
+                    <option value="">Pilih Bulan</option>
+                    <option value="january">Januari</option>
+                    <option value="february">Februari</option>
+                    
+                </select>
+        
+                <label for="tahun_produksi">Tahun:</label>
+                <select id="tahun_produksi">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+        
+                <button class="btn-filter">Tampilkan</button>
+            </div>
+        
+            <table class="production-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Jumlah Produksi</th>
+                        <th>Target Produksi</th>
+                        <th>Cacat / Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   {% for item in report_data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.tanggal|date:"d/m/Y" }}</td>
+                        <td>{{ item.jumlah_terbeli }}</td>
+                        <td>{{ item.target_produksi }}</td>
+                        <td>{{ item.cacat }}</td>
+                    </tr>
+                      {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script>
+      // Buka modal
+      function openModal() {
+          document.getElementById("myModal").style.display = "block";
+      }
+  
+      // Tutup modal
+      function closeModal() {
+          document.getElementById("myModal").style.display = "none";
+      }
+  
+      // Tutup jika klik di luar modal
+      window.onclick = function(event) {
+          const modal = document.getElementById("myModal");
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      }
+  
+      // Tombol close (X)
+      document.addEventListener("DOMContentLoaded", function () {
+          document.querySelector(".close-btn").addEventListener("click", closeModal);
+      });
+  </script>
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll(".tab-content").forEach(section => section.classList.add("hidden"));
+            document.getElementById(sectionId).classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

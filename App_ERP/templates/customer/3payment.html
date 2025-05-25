@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pesanan</title>
+        <!-- TEXT -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/3payment.css' %}">
+    </head>
+    <body>
+        <div class="all">
+            <div class="judul">
+                <div class="logo2">
+                    <img src="{% static 'images/Logo2.png'%}" alt="Logo2" width="200px" height="200px">
+                </div>
+                <div class="judul-text">
+                    <h1>Checkout</h1>
+                    <hr>
+                    </hr>
+                </div>
+            </div>
+            <div class="container">
+                <form method="post">
+                    {% csrf_token %}
+                    <div id="order-list"></div>
+                    <div class="total">
+                        <p>
+                            <strong>Total Harga Makanan</strong> 
+                            <span id="total-price">RP0</span>
+                        </p>
+                    </div>
+                    <div class="form-grup1">
+                        <div class="form-group">
+                            <label for="nama_pemesan">Nama Pemesan:</label>
+                            <input type="text" id="nama_pemesan" name="nama_pemesan" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="no_meja">No Meja:</label>
+                            <input type="text" id="no_meja" name="no_meja" required>
+                        </div>
+                    </div>
+                    <div class="form-grup2">
+                        <div class="form-group">
+                            <label for="metode_pembayaran">Metode Pembayaran:</label>
+                            <select id="metode_pembayaran" name="metode_pembayaran" required>
+                                <option value="transfer">Transfer Bank</option>
+                                <option value="tunai">Tunai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button type="button" class="btn kembali">Kembali</button>
+                        <button type="submit" class="btn bayar">Bayar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <footer>
+            <p>© 2025 Ocean Bit Company.</p>
+        </footer>
+    </body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const orderList = document.getElementById("order-list");
+            const totalPriceElement = document.getElementById("total-price");
+            const bayarButton = document.querySelector(".btn.bayar"); // Ambil tombol bayar
+            let pesanan = JSON.parse(localStorage.getItem("pesanan")) || [];
+            let totalHarga = 0;
+        
+            if (pesanan.length === 0) {
+                orderList.innerHTML = "<p>Keranjang kosong.</p>";
+                return;
+            }
+        
+            function updateLocalStorage() {
+                localStorage.setItem("pesanan", JSON.stringify(pesanan));
+            }
+        
+            function updateTotalPrice() {
+                totalHarga = pesanan.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                totalPriceElement.textContent = `RP${totalHarga}`;
+            }
+        
+            pesanan.forEach((item, index) => {
+                let orderItem = document.createElement("div");
+                orderItem.classList.add("order-item");
+        
+                orderItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="food-img">
+                    <div class="item-details">
+                        <div class="p2">
+                            <p>${item.name}</p>
+                            <div class="p2-1">
+                                <p>RP${item.price}</p>
+                            </div>
+                        </div> 
+                            x 
+                        <div class="p3">
+                            <button class="btn-minus" data-index="${index}">−</button>
+                            <span class="qty-value">${item.quantity}</span>
+                            <button class="btn-plus" data-index="${index}">+</button>
+                        </div>
+                    </div>
+                    <p class="total-price">RP${item.price * item.quantity}</p>
+                `;
+        
+                orderList.appendChild(orderItem);
+            });
+        
+            updateTotalPrice();
+        
+            document.querySelectorAll(".btn-plus").forEach(button => {
+                button.addEventListener("click", function () {
+                    let index = this.getAttribute("data-index");
+                    pesanan[index].quantity++;
+                    updateLocalStorage();
+                    location.reload();
+                });
+            });
+        
+            document.querySelectorAll(".btn-minus").forEach(button => {
+                button.addEventListener("click", function () {
+                    let index = this.getAttribute("data-index");
+                    if (pesanan[index].quantity > 1) {
+                        pesanan[index].quantity--;
+                    } else {
+                        pesanan.splice(index, 1);
+                    }
+                    updateLocalStorage();
+                    location.reload();
+                });
+            });
+        
+            // FUNGSI BARU: Kirim Pesanan ke Django saat "Bayar" ditekan
+            bayarButton.addEventListener("click", function (event) {
+                event.preventDefault(); // Hindari form reload
+        
+                const namaPemesan = document.getElementById("nama_pemesan").value;
+                const noMeja = document.getElementById("no_meja").value;
+                const metodePembayaran = document.getElementById("metode_pembayaran").value;
+        
+                if (!namaPemesan || !noMeja || pesanan.length === 0) {
+                    alert("Harap isi semua data dan pastikan ada pesanan!");
+                    return;
+                }
+        
+                fetch("/simpan_pesanan/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    },
+                    body: JSON.stringify({
+                        nama_pemesan: namaPemesan,
+                        no_meja: noMeja,
+                        metode_pembayaran: metodePembayaran,
+                        pesanan: pesanan
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Debugging
+                    if (data.status === "success") {
+                        alert("Pesanan berhasil disimpan!");
+                        localStorage.removeItem("pesanan"); // Hapus pesanan setelah disimpan
+                        window.location.href = "/sukses/"; // Redirect ke halaman sukses
+                    } else {
+                        alert("Terjadi kesalahan, silakan coba lagi.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        
+        });
+    </script>
+</html>

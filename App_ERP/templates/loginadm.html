@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    </head>
+    <body>
+        <!-- Gambar kiri -->
+        <div class="kiri">
+            <img src="{% static 'images/bckgrnd1.jpg'%}">
+        </div>
+
+        <!-- Form login -->
+        <div class="kanan">
+            <div class="kotak-login">
+                <img src="{% static 'images/logo3.png'%}">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Tampilkan error global -->
+                    {% if form.non_field_errors %}
+                        <div class="error">
+                            {% for error in form.non_field_errors %}
+                                <p style="color:red;">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Input username -->
+                    <input type="text" name="username" placeholder="Username" value="{{ form.username.value|default_if_none:'' }}" required>
+
+                    <!-- Input password -->
+                    <input type="password" name="password" placeholder="Password" required>
+
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

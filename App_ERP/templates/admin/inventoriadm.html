@@ -1,0 +1,348 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Inventory Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cardss {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.cards {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.cards h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+.cards p {
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #00458a;
+}
+
+.box {
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    min-width: 300px; 
+}
+
+.box h2 {
+    margin: 0;
+    font-weight: bold;
+    color: black;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+th {
+    background-color: #004080;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+tr.highlight {
+    background-color: #e0f7fa;
+    font-weight: bold;
+}
+
+tr.header-row td {
+    background-color: #cce5ff;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.notification {
+    background: #fff6e5;
+    padding: 15px;
+    border-left: 5px solid #ffa500;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 40%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.input-btn { 
+    background-color: whitesmoke;
+    border: black;
+    color: black;
+    margin: 4px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* Contoh styling untuk pesan error/sukses */
+.alert {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{% static 'images/Logo1.png'%}" alt="Admin Inventory" class="logo-image">
+            <h2>Admin Inventory</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" onclick="showSection('dashboard')">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('data_bahan_baku')">Data Bahan Baku</a></li>
+        </ul>
+            <button class="logout-btn">Log Out</button>
+    </div>
+
+    <main class="main-content">
+
+        <section id="dashboard" class="tab-content">
+    <div class="top-bar">
+        <h2>dashboard</h2>
+    </div>
+    <div class="cardss">
+        <div class="cards">
+            <h3>Total Item</h3>
+            <p>{{ total_item }}</p>
+        </div>
+        <div class="cards">
+            <h3>Total stok</h3>
+            <p>{{ total_stok }} kg</p>
+        </div>
+        <div class="cards">
+            <h3>Stok Bahan Kritis</h3>
+            <p>{{ stok_kritis }} item</p>
+        </div>
+        <div class="cards">
+            <h3>stok kosong</h3>
+            <p>{{ stok_kosong }} item</p>
+        </div>
+    </div>
+        <!-- Tabel Stok Detail -->
+        <div class="bg-white p-4 rounded-xl shadow mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Data Stok Bahan Baku</h2>
+            <div class="overflow-x-auto">
+            <table class="min-w-full text-left">
+                <thead class="bg-gray-200">
+                <tr>
+                    <th class="p-2">Kode</th>
+                    <th class="p-2">Nama Bahan</th>
+                    <th class="p-2">Jumlah</th>
+                    <th class="p-2">Lokasi</th>
+                    <th class="p-2">Update</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data_stok %}
+                <tr class="border-b">
+                <td class="p-2">{{ item.kode_bahan_baku }}</td>
+                <td class="p-2">{{ item.nama_bahan }}</td>
+                <td class="p-2">{{ item.stok_minimum }} kg</td>
+                <td class="p-2">{{ item.lokasi }}</td>
+                <td class="p-2">{{ item.tanggal_update|date:"d/m/Y" }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        
+        <!-- Notifikasi Stok -->
+        <div class="section">
+            <h2>Catatan Penting</h2>
+            <div class="notification">🔔 Stok telur hampir habis</div>
+            <div class="notification">🔔 Minyak Goreng habis, segera lakukan pembelian ulang.</div>
+            <div class="notification">🔔 Bahan 'santan' kadaluarsa besok</div>
+        </div>
+        </section>
+
+        <section id="data_bahan_baku" class="tab-content hidden">
+            <div class="top-bar">
+                <h2 class="centered-header">data bahan baku</h2>
+            </div>
+        
+            <div class="filter">
+                <label for="bulan">Bulan:</label>
+                <select id="bulan">
+                    <option value="">Pilih Bulan</option>
+                    <option value="january">January</option>
+                    <option value="february">February</option>
+                </select>
+        
+                <label for="tahun">Tahun:</label>
+                <select id="tahun">
+                    <option value="">Pilih Tahun</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+        
+                <button class="btn-filter">Tampilkan</button>
+            </div>
+        
+            <button onclick="openModal('modalTambahData')" class="logout-btn">Tambah</button>
+
+            <div id="modalTambahData" class="modal hidden">
+    <div class="modal-content">
+        <span onclick="closeModal('modalTambahData')" class="close-btn">&times;</span>
+        <h2>Tambah Data</h2>
+        <form method="POST">
+        {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li class="alert {{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+    {% csrf_token %}
+    <input type="text" name="Bahan" class="input-btn mb-4" id="Bahan" placeholder="Input nama bahan baku" required><br>
+    <input type="text" name="satuan" class="input-btn mb-4" id="satuan" placeholder="Input satuan" required><br>
+    <input type="number" name="harga" class="input-btn mb-4" id="harga" placeholder="Input harga per unit" required><br>
+    <input type="number" name="stok_minimum" class="input-btn mb-4" id="stok_minimum" placeholder="Input stok minimum (kg, maksimal 50)" required max="50"><br>
+    <input type="text" name="suplier" class="input-btn mb-4" id="suplier" placeholder="Input supplier" required><br>
+    <input type="date" name="tanggal" class="input-btn mb-4" id="tanggal" required>
+    <input type="text" name="lokasi" class="input-btn mb-4" placeholder="Lokasi" required>
+
+
+    <button type="submit" class="logout-btn">Simpan</button>
+        </form>
+            </div>
+    </div>
+        <table class="bahan-baku-table">
+    <thead>
+        <tr>
+            <th>Kode Bahan Baku</th>
+            <th>Nama Bahan Baku</th>
+            <th>Harga per Unit</th>
+            <th>Stok Minimum</th>
+            <th>Supplier</th>
+            <th>Tanggal Kadaluarsa</th>
+            <th>Total Harga</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+    {% for item in data_stok %}
+    <tr class="border-b">
+        <td class="p-2">{{ item.kode_bahan_baku }}</td>
+        <td class="p-2">{{ item.nama_bahan }}</td>
+        <td class="p-2">Rp {{ item.harga_per_unit|intcomma }}</td>
+        <td class="p-2">{{ item.stok_minimum }} kg</td>
+        <td class="p-2">{{ item.supplier }}</td>
+        <td class="p-2">{{ item.tanggal_kadaluarsa|date:"d/m/y" }}</td>
+        <td class="p-2">Rp {{ item.total_harga|intcomma }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="7" class="p-2 text-center text-gray-500">Data stok belum tersedia.</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+        </table>
+        </section>
+    </main>
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+    
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+    
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll(".modal");
+            modals.forEach(function(modal) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+        };
+    </script>
+    
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll(".tab-content").forEach(section => section.classList.add("hidden"));
+            document.getElementById(sectionId).classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

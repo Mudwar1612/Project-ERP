@@ -1,0 +1,141 @@
+h2 {
+    text-align: center;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+    }
+    
+    th {
+        background-color: #004080;
+        color: white;
+        font-weight: bold;
+    }
+    
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    
+    tr.highlight {
+        background-color: #e0f7fa;
+        font-weight: bold;
+    }
+    
+    tr.header-row td {
+        background-color: #cce5ff;
+        font-weight: bold;
+        font-size: 15px;
+    }
+    
+    .green {
+        background-color: #6f9f6f; /* Warna hijau */
+    }
+    
+    .yellow {
+        background-color: #f0e68c; /* Warna kuning */
+    }
+    
+    .red {
+        background-color: #ff6961; /* Warna merah */
+    }
+    
+    h1{
+        text-align: center;
+    }
+    
+    .cardss {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+    
+    .cards {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        padding: 20px;
+    }
+    
+    .cards h3 {
+        margin: 0;
+        font-size: 16px;
+        color: #444;
+    }
+    
+    .cards p {
+        margin-top: 10px;
+        font-size: 22px;
+        font-weight: bold;
+        color: #00458a;
+    }
+    
+    .notification {
+        background: #fff6e5;
+        padding: 15px;
+        border-left: 5px solid #ffa500;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .chart-placeholder {
+        height: 200px;
+        background-color: #e8e8e8;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        font-style: italic;
+    }
+    
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    
+    .modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 40%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    
+    .close-btn {
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .input-btn { 
+        background-color: whitesmoke;
+        border: black;
+        color: black;
+        margin: 4px;
+        padding: 10px;
+        cursor: pointer;
+        text-align: center;
+        width: 100%;
+        border-radius: 10px;
+    }

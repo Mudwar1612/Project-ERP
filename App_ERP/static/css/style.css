@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: #004c8c;
+    border-radius: 32px;
+    margin: 20px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.action-logout {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.logo {
+    text-align: center;
+}
+
+.logo-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    margin: 20px 0;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+.menu a.active {
+    background-color: #008cba;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.logout-btn {
+    background-color: #081a53;
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.main-content {
+    position: absolute;
+    right: 0;
+    width: calc(100% - 300px);
+    padding: 20px;
+    padding-left: 40px;
+}
+
+.top-bar {
+    display:block;
+    justify-content:flex-end;
+    padding: 10px;
+    background-color: #004c8c;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 32px;
+    margin-bottom: 20px;
+}
+
+
+.notification-icon, .settings-icon {
+    margin: 0 10px;
+    color: #c0c0c0;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.card {
+    background-color: #d3d3d3;
+    color: red;
+    text-align: center;
+    padding: 50px;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.card:hover {
+    background-color: #c0c0c0;
+}
+
+.hidden {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+th {
+    background-color: #004080;
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+tr.highlight {
+    background-color: #e0f7fa;
+    font-weight: bold;
+}
+
+tr.header-row td {
+    background-color: #cce5ff;
+    font-weight: bold;
+    font-size: 15px;
+}

@@ -1,0 +1,312 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.all {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 50px;
+    padding-left: 50px;
+    width: 100%;
+}
+
+.judul {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Mengatur elemen agar tidak berdesakan */
+    gap: 50px; /* Jarak antara sidebar dan menu */
+}
+
+.judul-text {
+    display: flex;
+    flex-direction: column; /* Supaya teks dan garis berada dalam satu kolom */
+    align-items: center; /* Posisikan kontennya ke tengah */
+    flex-grow: 1; /* Agar tetap di tengah */
+}
+
+.judul-text h1 {
+    font-size: 64px;
+    text-align: center;
+    font-weight: 100;
+    color: #000000;
+}
+
+.judul-text hr {
+    display: inline;
+    width: 100%; /* Menyesuaikan panjang dengan teks */
+    height: 1px;
+    background-color: rgb(28.63% 30.2% 32.55%);
+    margin-top: 40px; /* Beri sedikit jarak dari teks */
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    background: white;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    background: #D9D9D9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: #494D53;
+}
+
+.item-details {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /*gap: 20px;*/
+}
+
+.p2 {
+    width: 525px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.p2-1 {
+    margin-top: 10px;
+}
+
+.p3 {
+    width: 525px;
+    text-align: center;
+}
+
+.btn-minus {
+    padding: 0 2px;
+}
+
+.btn-plus {
+    padding: 0 2px;
+}
+
+.item-name {
+    flex: 2;
+}
+
+.price-quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.quantity-control {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.qty-btn {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.order-list {
+    background: #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.order-item {
+    display: flex;
+    height: 100px;
+    align-items: center;
+    background: #D9D9D9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.food-img {
+    width: 105px;
+    height: 105px;
+    object-fit: cover;
+    border-radius: 100px;
+    margin: 0 25px;
+}
+
+.total {
+    background: #D9D9D9;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin: 10px 0;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.kembali {
+    background: #3498db;
+    color: white;
+}
+
+.qty-value {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 30px;
+    margin: 5px 10px;
+}
+
+.total-price {
+    font-size: 18px;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+    flex: 1;
+}
+
+.total {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.total p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #494D53;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.form-grup1 {
+    display: flex;
+    justify-content: space-between;
+    background-color: #D9D9D9;
+    height: 50px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 30px;
+}
+
+.form-grup2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #D9D9D9;
+    height: 50px;
+    padding: 0 10px;
+    margin-top: 10px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+label {
+    font-weight: bold;
+    text-align: left;
+}
+
+input, select {
+    flex: 2;
+    padding: 8px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #5AACD1;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 35px;
+    outline: 1px solid #494D53;
+    cursor: pointer;
+}
+
+.btn.kembali {
+    background-color: #5AACD1;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+footer {
+    width: 100%;
+    margin-top: 40px;
+    display: block;
+    text-align: center;
+    padding: 25px;
+    background-color: #5598B6;
+}
+
+footer p {
+    color: white;
+    font-size: 30px;
+    font-weight: 200;
+}
